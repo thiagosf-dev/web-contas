@@ -1,12 +1,10 @@
-import IncrementDecrement from "./components/IncrementDecrement";
-
-// tem que retornar uma função
-// essa função tem que retornar um JSX
+import { Button } from "@chakra-ui/react";
+import Login from "./components/Login";
 
 function App() {
   return (
     <>
-      <IncrementDecrement />
+      <Login />
     </>
   );
 }
