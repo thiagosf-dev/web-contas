@@ -12,9 +12,9 @@
 
 1. Instale as dependências do projeto com o comando:
 
-   ```Shell
-   npm install
-   ```
+    ```Shell
+    npm install
+    ```
 
 1. Suba a aplicação com o comando:
 
