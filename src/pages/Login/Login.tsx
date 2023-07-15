@@ -7,15 +7,27 @@ import {
   FormLabel,
   Icon,
   Input,
+  Text,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 import { PiUserCircleBold } from "react-icons/pi";
 import { MyButton } from "../../components/MyButton/MyButton";
 
+interface ErrorResponse {
+  response: {
+    data: {
+      message: string;
+      status: number;
+      success: boolean;
+    };
+  };
+}
+
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
   async function handleLogin() {
     try {
@@ -23,13 +35,15 @@ export function Login() {
         email: email,
         senha: password,
       });
-    } catch (error) {
-      console.error("Ocorreu  um erro: ", error);
-    }
-  }
 
-  function showText() {
-    console.log("apertei o botão caracas...");
+      setMessage(`${response.data.message}`);
+    } catch (error) {
+      const err: ErrorResponse = error as ErrorResponse;
+      console.error("Ocorreu  um erro: ", err);
+      setMessage(
+        `Erro: ${err.response.data.message} com o código ${err.response.data.status}`
+      );
+    }
   }
 
   function clearForm() {
@@ -41,6 +55,22 @@ export function Login() {
     <>
       <Card p={8} rounded={12} bg={"blackAlpha.400"}>
         <CardBody>
+          {message && (
+            <Flex mb={8} justify={"center"} w={"100%"}>
+              <Text
+                p={".5rem"}
+                px={"2rem"}
+                rounded={6}
+                fontSize={"1.25rem"}
+                fontWeight={"bold"}
+                bg={"red.700"}
+                color={"whiteAlpha.700"}
+              >
+                {message}
+              </Text>
+            </Flex>
+          )}
+
           <Flex justify={"center"} mb={8}>
             <Icon as={PiUserCircleBold} color={"purple.500"} boxSize={50} />
           </Flex>
