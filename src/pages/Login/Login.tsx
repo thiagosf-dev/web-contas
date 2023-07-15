@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { PiUserCircleBold } from "react-icons/pi";
+import { MyButton } from "../../components/MyButton/MyButton";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -25,6 +26,15 @@ export function Login() {
     } catch (error) {
       console.error("Ocorreu  um erro: ", error);
     }
+  }
+
+  function showText() {
+    console.log("apertei o botão caracas...");
+  }
+
+  function clearForm() {
+    setEmail("");
+    setPassword("");
   }
 
   return (
@@ -61,9 +71,19 @@ export function Login() {
               />
             </FormControl>
 
-            <Button onClick={handleLogin} colorScheme="purple">
-              ACESSAR
-            </Button>
+            <MyButton
+              buttonText="Acessar"
+              myColorScheme="red"
+              myOnClick={handleLogin}
+            />
+
+            <MyButton buttonText="Cadastrar" myColorScheme="blue" />
+
+            <MyButton
+              buttonText="Limpar"
+              myColorScheme="gray"
+              myOnClick={clearForm}
+            />
           </Flex>
         </CardBody>
       </Card>
