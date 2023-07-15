@@ -28,8 +28,11 @@ export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleLogin() {
+    setIsLoading(true);
+
     try {
       const response = await axios.post("http://localhost:3000/login", {
         email: email,
@@ -43,80 +46,99 @@ export function Login() {
       setMessage(
         `Erro: ${err.response.data.message} com o código ${err.response.data.status}`
       );
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000); // 1s
     }
   }
 
   function clearForm() {
     setEmail("");
     setPassword("");
+    setMessage("")
   }
 
   return (
     <>
-      <Card p={8} rounded={12} bg={"blackAlpha.400"}>
-        <CardBody>
-          {message && (
-            <Flex mb={8} justify={"center"} w={"100%"}>
-              <Text
-                p={".5rem"}
-                px={"2rem"}
-                rounded={6}
-                fontSize={"1.25rem"}
-                fontWeight={"bold"}
-                bg={"red.700"}
-                color={"whiteAlpha.700"}
-              >
-                {message}
-              </Text>
+      {isLoading ? (
+        <>
+          <Flex>
+            <Text
+              fontSize={"1.25rem"}
+              fontWeight={"bold"}
+              color={"whiteAlpha.700"}
+            >
+              Carregando, por favor aguarde...
+            </Text>
+          </Flex>
+        </>
+      ) : (
+        <Card p={8} rounded={12} bg={"blackAlpha.400"}>
+          <CardBody>
+            {message && (
+              <Flex mb={8} justify={"center"} w={"100%"}>
+                <Text
+                  p={".5rem"}
+                  px={"2rem"}
+                  rounded={6}
+                  fontSize={"1.25rem"}
+                  fontWeight={"bold"}
+                  bg={"red.700"}
+                  color={"whiteAlpha.700"}
+                >
+                  {message}
+                </Text>
+              </Flex>
+            )}
+
+            <Flex justify={"center"} mb={8}>
+              <Icon as={PiUserCircleBold} color={"purple.500"} boxSize={50} />
             </Flex>
-          )}
+            <Flex flexDir={"column"} gap={6}>
+              <FormControl>
+                <FormLabel fontSize={"20"} color={"purple.300"}>
+                  E-mail
+                </FormLabel>
+                <Input
+                  placeholder="E-mail"
+                  color={"blue.500"}
+                  bg={"ActiveCaption"}
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </FormControl>
 
-          <Flex justify={"center"} mb={8}>
-            <Icon as={PiUserCircleBold} color={"purple.500"} boxSize={50} />
-          </Flex>
-          <Flex flexDir={"column"} gap={6}>
-            <FormControl>
-              <FormLabel fontSize={"20"} color={"purple.300"}>
-                E-mail
-              </FormLabel>
-              <Input
-                placeholder="E-mail"
-                color={"blue.500"}
-                bg={"ActiveCaption"}
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
+              <FormControl>
+                <FormLabel fontSize={"20"} color={"purple.300"}>
+                  Senha
+                </FormLabel>
+                <Input
+                  placeholder="Senha"
+                  color={"blue.500"}
+                  bg={"ActiveCaption"}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              </FormControl>
+
+              <MyButton
+                buttonText="Acessar"
+                myColorScheme="red"
+                myOnClick={handleLogin}
               />
-            </FormControl>
 
-            <FormControl>
-              <FormLabel fontSize={"20"} color={"purple.300"}>
-                Senha
-              </FormLabel>
-              <Input
-                placeholder="Senha"
-                color={"blue.500"}
-                bg={"ActiveCaption"}
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
+              <MyButton buttonText="Cadastrar" myColorScheme="blue" />
+
+              <MyButton
+                buttonText="Limpar"
+                myColorScheme="gray"
+                myOnClick={clearForm}
               />
-            </FormControl>
-
-            <MyButton
-              buttonText="Acessar"
-              myColorScheme="red"
-              myOnClick={handleLogin}
-            />
-
-            <MyButton buttonText="Cadastrar" myColorScheme="blue" />
-
-            <MyButton
-              buttonText="Limpar"
-              myColorScheme="gray"
-              myOnClick={clearForm}
-            />
-          </Flex>
-        </CardBody>
-      </Card>
+            </Flex>
+          </CardBody>
+        </Card>
+      )}
     </>
   );
 }
