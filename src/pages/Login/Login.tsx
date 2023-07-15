@@ -24,7 +24,11 @@ interface ErrorResponse {
   };
 }
 
-export function Login() {
+interface LoginProps {
+  changeIsLogged: (value: boolean) => void;
+}
+
+export function Login({ changeIsLogged }: LoginProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -40,6 +44,7 @@ export function Login() {
       });
 
       setMessage(`${response.data.message}`);
+      changeIsLogged(true);
     } catch (error) {
       const err: ErrorResponse = error as ErrorResponse;
       console.error("Ocorreu  um erro: ", err);
@@ -47,16 +52,14 @@ export function Login() {
         `Erro: ${err.response.data.message} com o código ${err.response.data.status}`
       );
     } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 3000); // 1s
+      setIsLoading(false);
     }
   }
 
   function clearForm() {
     setEmail("");
     setPassword("");
-    setMessage("")
+    setMessage("");
   }
 
   return (
