@@ -10,7 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PiUserCircleBold } from "react-icons/pi";
 import { MyButton } from "../../components/MyButton/MyButton";
 
@@ -61,6 +61,18 @@ export function Login({ changeIsLogged }: LoginProps) {
     setPassword("");
     setMessage("");
   }
+
+  useEffect(()=>{
+    console.log('chamou o useEffect com array vazio...');
+  }, [])
+  
+  useEffect(()=>{
+    console.log('chamou o useEffect sem array...');
+  })
+  
+  // useEffect(()=>{
+  //   console.log('chamou o useEffect com array vazio...');
+  // }, [])
 
   return (
     <>
