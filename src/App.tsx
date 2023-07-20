@@ -57,6 +57,18 @@ function App() {
                       Listar contas
                     </Text>
                   </Link>
+
+                  <Link
+                    as={LinkRouter}
+                    to="/cadastrar/contas"
+                    _hover={{ backgroundColor: "gray" }}
+                    w={"100%"}
+                    textAlign={"center"}
+                  >
+                    <Text color={"whiteAlpha.800"} fontSize={"1.35rem"}>
+                      Cadastrar contas
+                    </Text>
+                  </Link>
                 </VStack>
               </Flex>
 
