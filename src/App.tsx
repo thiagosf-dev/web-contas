@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Flex align={'center'} justify={'center'} minHeight={"100vh"}>
+        <Flex align={'center'} justify={'center'} minHeight={"100vh"} overflow={'hidden'}>
           {!isLogged && <Login changeIsLogged={setIsLogged} />}
 
           {isLogged && (
@@ -73,7 +73,7 @@ function App() {
                   </VStack>
                 </Flex>
 
-                <Flex flex="1" bg="gray.300" p={"2rem"}>
+                <Flex flex="1" bg="gray.400" p={"2rem"}>
                   <Router />
                 </Flex>
               </Flex>
