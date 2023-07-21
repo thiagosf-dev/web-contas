@@ -32,10 +32,7 @@ export function AccountRegister() {
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/conta",
-        requestObject
-      );
+      await axios.post("http://localhost:3000/conta", requestObject);
       clearFields();
     } catch (error) {
       console.error(error);
