@@ -1,5 +1,8 @@
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
-  Button,
+  Center,
+  Divider,
+  IconButton,
   Table,
   TableCaption,
   TableContainer,
@@ -7,12 +10,14 @@ import {
   Td,
   Th,
   Thead,
-  Tr,
+  Tooltip,
+  Tr
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { AccountEdit } from "./AccountEdit";
 
-interface AccountType {
+export interface AccountType {
   _id: string;
   descricao: string;
   estaPaga: boolean;
@@ -25,6 +30,8 @@ export function AccountsList() {
   // useState => variável, função que altera a variável
   const [accounts, setAccounts] = useState<AccountType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showTable, setShowTable] = useState(true);
+  const [accountSelected, setAccountSelected] = useState({} as AccountType)
 
   async function callRequest() {
     setLoading(true);
@@ -40,9 +47,14 @@ export function AccountsList() {
     callRequest();
   }, []);
 
-  useEffect(() => {
-    console.log("alterou o valor da variável com sucesso");
-  }, [loading]);
+  // useEffect(() => {
+  //   console.log("alterou o valor da variável com sucesso");
+  // }, [loading]);
+
+  function handleEditAccount(account: AccountType) {
+    setShowTable(false);
+    setAccountSelected(account);
+  }
 
   return (
     <>
@@ -50,33 +62,67 @@ export function AccountsList() {
 
       {/* <Button onClick={callRequest}>PESQUISAR CONTAS</Button> */}
 
-      {!loading && (
-        <TableContainer>
-          <Table variant="simple">
-            <TableCaption>Listagem de Contas Cadastradas</TableCaption>
-            <Thead>
-              <Tr>
-                <Th>DESCRIÇÃO</Th>
-                <Th isNumeric>VALOR</Th>
-                <Th>TIPO</Th>
-                <Th>PAGA?</Th>
-                <Th>VENCIMENTO</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {accounts.map((account) => (
+      {
+        !loading && showTable && (
+          <TableContainer>
+            <Table variant="simple">
+              <TableCaption>Listagem de Contas Cadastradas</TableCaption>
+              <Thead>
                 <Tr>
-                  <Td>{account.descricao}</Td>
-                  <Td>{account.valor}</Td>
-                  <Td>{account.tipo}</Td>
-                  <Td>{account.estaPaga ? "Sim" : "Não"}</Td>
-                  <Td>{account.dataVencimento}</Td>
+                  <Th>DESCRIÇÃO</Th>
+                  <Th isNumeric>VALOR</Th>
+                  <Th>TIPO</Th>
+                  <Th>PAGA?</Th>
+                  <Th>VENCIMENTO</Th>
+                  <Th textAlign={'center'}>AÇÕES</Th>
                 </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
-      )}
+              </Thead>
+              <Tbody>
+                {accounts.map((account) => (
+                  <Tr>
+                    <Td>{account.descricao}</Td>
+                    <Td>{account.valor}</Td>
+                    <Td>{account.tipo}</Td>
+                    <Td>{account.estaPaga ? "Sim" : "Não"}</Td>
+                    <Td>{account.dataVencimento}</Td>
+                    <Td>
+                      <Center height='20px' display={'flex'} gap={'.5rem'}>
+                        <Tooltip hasArrow label='Editar conta' fontSize='md' placement='top'>
+                          <IconButton
+                            colorScheme='blue'
+                            aria-label='Search database'
+                            icon={<EditIcon />}
+                            onClick={() => handleEditAccount(account)}
+                          />
+                        </Tooltip>
+
+                        <Divider orientation='vertical' />
+
+                        <Tooltip hasArrow label='Excluir conta' fontSize='md' placement='top'>
+                          <IconButton
+                            colorScheme='red'
+                            aria-label='Search database'
+                            icon={<DeleteIcon />}
+                          />
+                        </Tooltip>
+                      </Center>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </TableContainer>
+        )
+      }
+
+      {
+        !loading && !showTable && (
+          <AccountEdit
+            onClickChangeShowTable={() => setShowTable(true)}
+            account={accountSelected}
+          />
+        )
+      }
     </>
   );
 }
