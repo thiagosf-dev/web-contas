@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AccountType } from "./AccountsList";
 
 interface AccountEditProps {
-  onClickChangeShowTable?: () => void;
+  onClickChangeShowTable: () => void;
   account: AccountType;
 }
 
@@ -12,7 +12,7 @@ export function AccountEdit(props: AccountEditProps) {
   const [description, setDescription] = useState(props.account.descricao);
   const [value, setValue] = useState(props.account.valor);
   const [isPaid, setIsPaid] = useState(props.account.estaPaga);
-  const [accountType, setAccountType] = useState(props.account.tipo);
+  const [accountType, setAccountType] = useState<string>(props.account.tipo);
 
   async function handleSaveAccount() {
     const requestObject = {
@@ -25,6 +25,7 @@ export function AccountEdit(props: AccountEditProps) {
     try {
       await axios.put(`http://localhost:3000/conta/${props.account._id}`, requestObject);
       console.log('salvou com sucesso...');
+      props.onClickChangeShowTable();
     } catch (error) {
       console.error(error);
     }
@@ -60,7 +61,7 @@ export function AccountEdit(props: AccountEditProps) {
         <FormControl>
           <FormLabel>Está Paga?</FormLabel>
           <RadioGroup
-            onChange={() => setIsPaid(isPaid ? true : false)}
+            onChange={(value) => setIsPaid(value === 's' ? true : false)}
             value={isPaid ? 's' : 'n'}
           >
             <Stack direction="row">

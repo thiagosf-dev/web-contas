@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { AccountDelete } from "./AccountDelete";
 import { AccountEdit } from "./AccountEdit";
 
 export interface AccountType {
@@ -32,6 +33,7 @@ export function AccountsList() {
   const [loading, setLoading] = useState(false);
   const [showTable, setShowTable] = useState(true);
   const [accountSelected, setAccountSelected] = useState({} as AccountType)
+  const [showModal, setShowModal] = useState(false);
 
   async function callRequest() {
     setLoading(true);
@@ -47,13 +49,24 @@ export function AccountsList() {
     callRequest();
   }, []);
 
-  // useEffect(() => {
-  //   console.log("alterou o valor da variável com sucesso");
-  // }, [loading]);
+  useEffect(() => {
+    callRequest();
+  }, [showTable]);
+
+  useEffect(() => {
+    if (!showModal) {
+      callRequest();
+    }
+  }, [showModal]);
 
   function handleEditAccount(account: AccountType) {
     setShowTable(false);
     setAccountSelected(account);
+  }
+
+  function handleDeleteAccountClick(account: AccountType) {
+    setAccountSelected(account);
+    setShowModal(true);
   }
 
   return (
@@ -66,7 +79,13 @@ export function AccountsList() {
         !loading && showTable && (
           <TableContainer>
             <Table variant="simple">
-              <TableCaption>Listagem de Contas Cadastradas</TableCaption>
+              <TableCaption>
+                {
+                  accounts.length > 0 ?
+                    'Listagem de Contas Cadastradas' :
+                    'Não existe conta cadastrada'
+                }
+              </TableCaption>
               <Thead>
                 <Tr>
                   <Th>DESCRIÇÃO</Th>
@@ -103,6 +122,7 @@ export function AccountsList() {
                             colorScheme='red'
                             aria-label='Search database'
                             icon={<DeleteIcon />}
+                            onClick={() => handleDeleteAccountClick(account)}
                           />
                         </Tooltip>
                       </Center>
@@ -120,6 +140,16 @@ export function AccountsList() {
           <AccountEdit
             onClickChangeShowTable={() => setShowTable(true)}
             account={accountSelected}
+          />
+        )
+      }
+
+      {
+        showModal && (
+          <AccountDelete
+            account={accountSelected}
+            closeModal={() => setShowModal(false)}
+            showModal={showModal}
           />
         )
       }
